@@ -57,13 +57,12 @@ and failure modes are all in [`DESIGN.md`](./DESIGN.md).
 
 Each clip is a **single side-by-side recording of two users on two different backend
 instances** — **left = User A on `app1`** (teal bar), **right = User B on `app2`** (indigo
-bar). They were produced by the Playwright suite (`PW_VIDEO=1`) and merged with `ffmpeg`.
+bar), produced by the Playwright suite and merged with `ffmpeg`. The GIFs autoplay below;
+full-resolution `.mp4`s are in [`docs/media/playwright/`](docs/media/playwright/).
 
 **Randomized stress test — 30 mixed ops from both users converge and match the backend DB:**
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/9-randomized-stress-simulation-converges-and-matches-backend.mp4" controls width="100%"></video>
-
-> If the player doesn't load inline, [open the clip directly](docs/media/playwright/9-randomized-stress-simulation-converges-and-matches-backend.mp4).
+![Randomized stress test — two users on two instances converge](docs/media/playwright/9-randomized-stress-simulation-converges-and-matches-backend.gif)
 
 <details>
 <summary><b>▶ All 10 scenario recordings</b> (left = User A · app1, right = User B · app2)</summary>
@@ -72,47 +71,47 @@ bar). They were produced by the Playwright suite (`PW_VIDEO=1`) and merged with 
 
 **1 · Create + type** — a line created and typed on app1 appears on app2.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/1-create-type-text-converges-a-app1-b-app2.mp4" controls width="100%"></video>
+![Create and type](docs/media/playwright/1-create-type-text-converges-a-app1-b-app2.gif)
 
 **2 · Same-text LWW** — concurrent edits to the same text converge to one value.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/2-concurrent-edits-to-same-text-converge-to-one-value-lww.mp4" controls width="100%"></video>
+![Same-text last-writer-wins](docs/media/playwright/2-concurrent-edits-to-same-text-converge-to-one-value-lww.gif)
 
 **2b · Same field + live cursors** — both users in one field see each other's cursor, then converge.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/2b-two-users-in-the-same-field-live-peer-cursors-render-then-converge.mp4" controls width="100%"></video>
+![Same field with live peer cursors](docs/media/playwright/2b-two-users-in-the-same-field-live-peer-cursors-render-then-converge.gif)
 
 **3 · Different fields** — concurrent edits to different fields both survive.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/3-concurrent-edits-to-different-fields-both-survive.mp4" controls width="100%"></video>
+![Different fields both survive](docs/media/playwright/3-concurrent-edits-to-different-fields-both-survive.gif)
 
 **4 · Reorder** — reordering rows converges to one identical order.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/4-add-3-reorder-converges-row-order.mp4" controls width="100%"></video>
+![Reorder converges](docs/media/playwright/4-add-3-reorder-converges-row-order.gif)
 
 **5 · Delete** — deleting a line removes it for the peer.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/5-delete-removes-segment-for-the-peer.mp4" controls width="100%"></video>
+![Delete propagates](docs/media/playwright/5-delete-removes-segment-for-the-peer.gif)
 
 **6 · Undo** — undo reverts an edit visibly to the peer.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/6-undo-reverts-an-edit-visibly-to-the-peer.mp4" controls width="100%"></video>
+![Undo reverts for the peer](docs/media/playwright/6-undo-reverts-an-edit-visibly-to-the-peer.gif)
 
 **7 · Presence** — a presence avatar appears when a peer focuses a field.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/7-presence-chip-appears-for-a-focused-peer.mp4" controls width="100%"></video>
+![Presence avatar appears](docs/media/playwright/7-presence-chip-appears-for-a-focused-peer.gif)
 
 **8 · Reconnect / reload** — reloading a peer resyncs it to the converged state.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/8-reload-b-resyncs-to-converged-state.mp4" controls width="100%"></video>
+![Reload resyncs](docs/media/playwright/8-reload-b-resyncs-to-converged-state.gif)
 
 **9 · Randomized stress** — 30 mixed ops from both users converge and match the backend DB.
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/9-randomized-stress-simulation-converges-and-matches-backend.mp4" controls width="100%"></video>
+![Randomized stress](docs/media/playwright/9-randomized-stress-simulation-converges-and-matches-backend.gif)
 
 </details>
 
-The raw `.mp4` files live in [`docs/media/playwright/`](docs/media/playwright/).
+Full-resolution `.mp4` versions of every clip are in [`docs/media/playwright/`](docs/media/playwright/).
 
 ---
 
