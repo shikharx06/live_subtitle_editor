@@ -58,7 +58,13 @@ Each clip is a **single side-by-side recording of two users on two different bac
 instances** — **left = User A on `app1`** (teal bar), **right = User B on `app2`** (indigo
 bar), recorded by the Playwright suite (slow-paced for clarity) and merged with `ffmpeg`.
 
+**Playwright simulations**
 
+```bash
+cd web
+npx playwright test                        # 10 two-user cross-instance simulations
+PW_SLOWMO=700 npx playwright test --headed # watch them; PW_VIDEO=1 records side-by-side clips
+```
 
 https://github.com/user-attachments/assets/45db4f6e-a9ea-4deb-9d62-c8b6a503ff6e
 
