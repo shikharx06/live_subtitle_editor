@@ -17,16 +17,15 @@ load balancer**, with edit echo **< 150 ms**.
 ## Table of contents
 
 - [Overview](#overview)
-- [Demo](#demo)
 - [Features](#features)
 - [Architecture](#architecture)
 - [How convergence works](#how-convergence-works)
 - [Tech stack](#tech-stack)
+- [Project structure](#project-structure)
 - [Quick start](#quick-start)
 - [Web client](#web-client)
+- [Demo](#demo)
 - [Testing and simulations](#testing-and-simulations)
-- [API reference](#api-reference)
-- [Project structure](#project-structure)
 - [Design document](#design-document)
 
 ---
@@ -59,7 +58,47 @@ Each clip is a **single side-by-side recording of two users on two different bac
 instances** — **left = User A on `app1`** (teal bar), **right = User B on `app2`** (indigo
 bar), recorded by the Playwright suite (slow-paced for clarity) and merged with `ffmpeg`.
 
-The source `.mp4`s are in [`docs/media/playwright/`](docs/media/playwright/).
+
+
+https://github.com/user-attachments/assets/45db4f6e-a9ea-4deb-9d62-c8b6a503ff6e
+
+
+
+https://github.com/user-attachments/assets/2752ba49-7d88-40bb-8bd7-ea68b3644b20
+
+
+
+https://github.com/user-attachments/assets/30e0b17e-dee8-4f52-a248-1b66b5821865
+
+
+
+https://github.com/user-attachments/assets/1ccf34c5-d45c-4f13-a575-f80ea9a2876f
+
+
+
+https://github.com/user-attachments/assets/9ec7657b-7184-4518-83d0-bd1a51c5ade1
+
+
+
+https://github.com/user-attachments/assets/e5a8b019-de87-475e-89f5-f5613c1e7301
+
+
+
+https://github.com/user-attachments/assets/71baf287-3e36-4019-85d6-9ff4f0459ec6
+
+
+
+https://github.com/user-attachments/assets/5f402664-35a4-4166-8afe-2296d546b904
+
+
+
+https://github.com/user-attachments/assets/0ef2dee5-8474-47c2-9e5e-6184090587f4
+
+
+
+https://github.com/user-attachments/assets/c352f057-59d0-420a-a56a-784a11cd5ca3
+
+
 
 ---
 
@@ -195,54 +234,6 @@ cd web
 npx playwright test                        # 10 two-user cross-instance simulations
 PW_SLOWMO=700 npx playwright test --headed # watch them; PW_VIDEO=1 records side-by-side clips
 ```
-
----
-
-## API reference
-
-### Create a project
-
-```bash
-curl -s -X POST http://localhost:8080/projects \
-  -H 'content-type: application/json' -d '{"title":"My dub"}'
-# {"id":"<project_id>","title":"My dub","current_seq":0,"snapshot_seq":0,"created_at":"..."}
-```
-
-### Read the ordered snapshot
-
-```bash
-curl -s http://localhost:8080/projects/<project_id>
-# {"id":"...","current_seq":N,"snapshot_seq":0,"segments":[ ...ordered by position... ]}
-```
-
-### WebSocket protocol
-
-Connect to `ws://localhost:8080/projects/<project_id>/ws` (or `:8001`/`:8002` to pin an
-instance). The first message must be `hello`:
-
-```json
-{ "type": "hello", "user_id": "<uuid>", "last_seq": null }
-```
-
-The server replies `welcome` (snapshot + `current_seq`), then live `op`s. Client → server
-messages and the matching broadcast:
-
-```json
-{ "type": "op", "client_op_id": "<uuid>", "op_type": "create",
-  "fields": { "text": "hello world", "start_time_ms": 0, "end_time_ms": 1500 } }
-
-{ "type": "op", "client_op_id": "<uuid>", "op_type": "update", "chunk_id": "<id>", "fields": { "text": "edited" } }
-{ "type": "op", "client_op_id": "<uuid>", "op_type": "move",   "chunk_id": "<id>", "before": "a", "after": "b" }
-{ "type": "op", "client_op_id": "<uuid>", "op_type": "delete", "chunk_id": "<id>" }
-{ "type": "presence", "cursor": { "chunk_id": "<id>", "field": "text" } }
-{ "type": "undo", "client_op_id": "<uuid>" }
-```
-
-**Reconnect:** send `hello` with the highest contiguous `seq` you applied; the server sends
-a `sync` of only the ops you missed (or a full snapshot if you've fallen behind a snapshot),
-then replays any unacked ops idempotently.
-
----
 
 ## Project structure
 
