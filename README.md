@@ -103,27 +103,35 @@ Tailwind (web client) · Playwright (tests) · Docker Compose.
 
 ## Quick start
 
+One command brings up the whole stack — database, cache, two app servers, load balancer,
+and the web client:
+
 ```bash
-docker compose up -d --build     # postgres, redis, two app servers, nginx
-docker compose ps                # wait until app1 / app2 are healthy
+docker compose up -d --build     # postgres, redis, app1, app2, nginx, web
+docker compose ps                # wait until everything is healthy
 ```
 
-The backend API is at `http://localhost:8080` (load balancer) and `:8001` / `:8002` (the two
-servers directly). Opening those in a browser shows a small API notice — the editor UI is
-the web client below. Tear down with `docker compose down -v`.
+- **Editor (web UI):** http://localhost:3000
+- **Backend API:** http://localhost:8080 (load balancer), or :8001 / :8002 (the two servers directly)
+
+If port 3000 is taken, pick another: `WEB_PORT=3001 docker compose up -d --build`. Tear down
+with `docker compose down -v`.
 
 ---
 
 ## Web client
 
+The Next.js editor comes up with the stack above at **http://localhost:3000**. Create a
+project, then click **“Open on app2 ↗”** to open the same project on the other server in a
+second tab — edit in either and watch them sync.
+
+For frontend development with hot reload, run it outside Docker instead:
+
 ```bash
-cd web
-npm install
-npm run dev      # http://localhost:3000
+cd web && npm install && npm run dev
 ```
 
-Create a project, then click **“Open on app2 ↗”** to open the same project on the other
-server in a second tab — edit in either and watch them sync. More in [`web/README.md`](web/README.md).
+More in [`web/README.md`](web/README.md).
 
 ---
 

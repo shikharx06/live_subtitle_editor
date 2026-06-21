@@ -18,19 +18,21 @@ A clean, editorial light theme tuned for a dubbing studio:
   and a live activity feed. Peer cursors render as a colored border + a floating name tag on
   the exact field a peer is editing.
 
-## Prerequisites
+## Run with the stack (recommended)
 
-The backend must be running (FastAPI + Postgres + Redis + nginx via docker compose):
+This client is part of the root `docker-compose.yml`, so the whole app comes up together:
 
 ```bash
 # from the repo root
-docker compose up -d --build
+docker compose up -d --build      # backend + this client → http://localhost:3000
 ```
 
-Verify: `curl http://localhost:8001/health` returns `{"status":"ok","instance":"app1"}`.
-The suite checks app1 and app2 health in `globalSetup` and fails fast if either is down.
+(If port 3000 is busy, use `WEB_PORT=3001 docker compose up -d --build`.)
 
-## Setup & run
+## Run standalone (hot reload)
+
+The backend must be running (FastAPI + Postgres + Redis + nginx via docker compose from the
+repo root). Then:
 
 ```bash
 cd web
