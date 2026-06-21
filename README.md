@@ -59,56 +59,23 @@ Each clip is a **single side-by-side recording of two users on two different bac
 instances** — **left = User A on `app1`** (teal bar), **right = User B on `app2`** (indigo
 bar), recorded by the Playwright suite (slow-paced for clarity) and merged with `ffmpeg`.
 
-**Two users editing the same field — live peer cursors, then convergence:**
+Each link opens the clip on its own GitHub page with a video player (GitHub doesn't embed
+repo-hosted videos inline inside a README).
 
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/2b-two-users-in-the-same-field-live-peer-cursors-render-then-converge.mp4" controls muted width="100%"></video>
+▶ **[Two users editing the same field — live peer cursors, then convergence](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/2b-two-users-in-the-same-field-live-peer-cursors-render-then-converge.mp4)**
 
-<details>
-<summary><b>▶ All 10 scenario recordings</b> (left = User A · app1, right = User B · app2)</summary>
-
-<br>
-
-**1 · Create + type** — a line created and typed on app1 appears on app2.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/1-create-type-text-converges-a-app1-b-app2.mp4" controls muted width="100%"></video>
-
-**2 · Same-text LWW** — concurrent edits to the same text converge to one value.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/2-concurrent-edits-to-same-text-converge-to-one-value-lww.mp4" controls muted width="100%"></video>
-
-**2b · Same field + live cursors** — both users in one field see each other's cursor, then converge.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/2b-two-users-in-the-same-field-live-peer-cursors-render-then-converge.mp4" controls muted width="100%"></video>
-
-**3 · Different fields** — concurrent edits to different fields both survive.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/3-concurrent-edits-to-different-fields-both-survive.mp4" controls muted width="100%"></video>
-
-**4 · Reorder** — reordering rows converges to one identical order.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/4-add-3-reorder-converges-row-order.mp4" controls muted width="100%"></video>
-
-**5 · Delete** — deleting a line removes it for the peer.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/5-delete-removes-segment-for-the-peer.mp4" controls muted width="100%"></video>
-
-**6 · Undo** — undo reverts an edit visibly to the peer.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/6-undo-reverts-an-edit-visibly-to-the-peer.mp4" controls muted width="100%"></video>
-
-**7 · Presence** — a presence avatar appears when a peer focuses a field.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/7-presence-chip-appears-for-a-focused-peer.mp4" controls muted width="100%"></video>
-
-**8 · Reconnect / reload** — reloading a peer resyncs it to the converged state.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/8-reload-b-resyncs-to-converged-state.mp4" controls muted width="100%"></video>
-
-**9 · Randomized stress** — 30 mixed ops from both users converge and match the backend DB.
-
-<video src="https://github.com/shikharx06/live_subtitle_editor/raw/main/docs/media/playwright/9-randomized-stress-simulation-converges-and-matches-backend.mp4" controls muted width="100%"></video>
-
-</details>
+| # | Scenario | What it proves | Watch |
+|---|----------|----------------|-------|
+| 1 | Create + type | a line created and typed on app1 appears on app2 | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/1-create-type-text-converges-a-app1-b-app2.mp4) |
+| 2 | Same-text LWW | concurrent edits to the same text converge to one value | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/2-concurrent-edits-to-same-text-converge-to-one-value-lww.mp4) |
+| 2b | Same field + live cursors | both users in one field see each other's cursor, then converge | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/2b-two-users-in-the-same-field-live-peer-cursors-render-then-converge.mp4) |
+| 3 | Different fields | concurrent edits to different fields both survive | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/3-concurrent-edits-to-different-fields-both-survive.mp4) |
+| 4 | Reorder | reordering rows converges to one identical order | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/4-add-3-reorder-converges-row-order.mp4) |
+| 5 | Delete | deleting a line removes it for the peer | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/5-delete-removes-segment-for-the-peer.mp4) |
+| 6 | Undo | undo reverts an edit visibly to the peer | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/6-undo-reverts-an-edit-visibly-to-the-peer.mp4) |
+| 7 | Presence | a presence avatar appears when a peer focuses a field | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/7-presence-chip-appears-for-a-focused-peer.mp4) |
+| 8 | Reconnect / reload | reloading a peer resyncs it to the converged state | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/8-reload-b-resyncs-to-converged-state.mp4) |
+| 9 | Randomized stress | 30 mixed ops from both users converge and match the backend DB | [▶ play](https://github.com/shikharx06/live_subtitle_editor/blob/main/docs/media/playwright/9-randomized-stress-simulation-converges-and-matches-backend.mp4) |
 
 All `.mp4` files are in [`docs/media/playwright/`](docs/media/playwright/).
 
