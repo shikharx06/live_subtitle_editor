@@ -165,7 +165,7 @@ in §7.
 > The brief asks for the architecture diagram as item (5); it is placed here, before the
 > low-level design, because the LLD refers to these components.
 
-![Architecture diagram](docs/architecture.svg)
+![Architecture diagram](./docs/architecture.svg)
 
 <details>
 <summary>Same diagram as ASCII (boxes + arrows), if the SVG doesn't render</summary>
