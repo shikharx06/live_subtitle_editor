@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { INSTANCE_LABEL, otherInstance, peerColor, shortId } from "@/lib/config";
 import { useCollab } from "@/lib/useCollab";
-import type { Instance } from "@/lib/types";
+import type { Instance, Peer } from "@/lib/types";
 
 import { SegmentRow } from "./SegmentRow";
 
@@ -16,6 +16,14 @@ interface Props {
 export function Editor({ projectId, instance }: Props) {
   const { segments, peers, activity, status, you, instanceId, actions } = useCollab(projectId, instance);
   const peer = otherInstance(instance);
+
+  const cursorsByChunk = new Map<string, Peer[]>();
+  for (const p of peers) {
+    if (!p.cursor) continue;
+    const list = cursorsByChunk.get(p.cursor.chunk_id) ?? [];
+    list.push(p);
+    cursorsByChunk.set(p.cursor.chunk_id, list);
+  }
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8">
@@ -51,10 +59,12 @@ export function Editor({ projectId, instance }: Props) {
                   key={p.user_id}
                   data-testid="presence-chip"
                   data-user-id={p.user_id}
-                  title={p.user_id}
-                  className="rounded-full px-2 py-1 text-xs font-semibold text-white"
+                  data-editing={p.cursor ? p.cursor.field : undefined}
+                  title={p.cursor ? `${p.user_id} editing ${p.cursor.field}` : p.user_id}
+                  className="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-white"
                   style={{ backgroundColor: peerColor(p.user_id) }}
                 >
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-white/90" />
                   {shortId(p.user_id)}
                   {p.cursor ? " ✎" : ""}
                 </span>
@@ -118,6 +128,7 @@ export function Editor({ projectId, instance }: Props) {
                     actions={actions}
                     isFirst={i === 0}
                     isLast={i === segments.length - 1}
+                    peerCursors={cursorsByChunk.get(seg.chunk_id) ?? []}
                   />
                 ))
               )}

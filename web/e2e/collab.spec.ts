@@ -97,6 +97,56 @@ test.describe("cross-instance collaborative subtitles", () => {
     }
   });
 
+  test("2b. two users in the SAME field: live peer cursors render, then converge", async ({ browser }) => {
+    const pair = await setupPair(browser);
+    try {
+      await pair.a.getByTestId("add-segment").click();
+      await waitForRowCount(pair.a, 1);
+      const id = (await chunkIdOrder(pair.a))[0];
+      await waitForRowCount(pair.b, 1);
+
+      const textA = rowByChunk(pair.a, id).getByTestId("seg-text");
+      const textB = rowByChunk(pair.b, id).getByTestId("seg-text");
+
+      await textA.click();
+      await textB.click();
+
+      const peerCursorOnA = rowByChunk(pair.a, id).locator('[data-testid="peer-cursor"][data-field="text"]');
+      const peerCursorOnB = rowByChunk(pair.b, id).locator('[data-testid="peer-cursor"][data-field="text"]');
+      await expect(peerCursorOnA).toBeVisible();
+      await expect(peerCursorOnB).toBeVisible();
+      await expect(peerCursorOnA).toHaveAttribute("data-user-id", /.+/);
+
+      await textA.fill("A typed in the shared field");
+      await textB.fill("B typed in the shared field");
+      await textA.blur();
+      await textB.blur();
+
+      await expect
+        .poll(
+          async () => {
+            const va = await textA.inputValue();
+            const vb = await textB.inputValue();
+            return va === vb ? va : null;
+          },
+          { timeout: 20_000 },
+        )
+        .not.toBeNull();
+
+      const converged = await textA.inputValue();
+      expect(["A typed in the shared field", "B typed in the shared field"]).toContain(converged);
+      const snap = await getSnapshot(APP1_HTTP, pair.projectId);
+      expect(snap.segments.find((s) => s.chunk_id === id)?.text).toBe(converged);
+
+      await textA.click();
+      await expect(peerCursorOnB).toBeVisible();
+      await textA.blur();
+      await expect(peerCursorOnB).toHaveCount(0);
+    } finally {
+      await teardown(pair);
+    }
+  });
+
   test("3. concurrent edits to different fields both survive", async ({ browser }) => {
     const pair = await setupPair(browser);
     try {
