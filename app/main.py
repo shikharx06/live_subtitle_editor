@@ -5,6 +5,7 @@ import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
@@ -34,6 +35,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Real-Time Collaborative Subtitles Editor", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 _INDEX_HTML = os.path.join(os.path.dirname(__file__), "static", "index.html")
 
