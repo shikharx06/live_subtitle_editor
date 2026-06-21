@@ -17,15 +17,15 @@ load balancer**, with edit echo **< 150 ms**.
 ## Table of contents
 
 - [Overview](#overview)
+- [Demo](#demo)
 - [Features](#features)
 - [Architecture](#architecture)
 - [How convergence works](#how-convergence-works)
 - [Tech stack](#tech-stack)
-- [Project structure](#project-structure)
 - [Quick start](#quick-start)
 - [Web client](#web-client)
-- [Demo](#demo)
 - [Testing and simulations](#testing-and-simulations)
+- [Project structure](#project-structure)
 - [Design document](#design-document)
 
 ---
