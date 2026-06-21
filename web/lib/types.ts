@@ -3,6 +3,7 @@ export type Instance = "app1" | "app2" | "lb";
 export interface Speaker {
   id: string;
   label: string;
+  color: string;
 }
 
 export interface Segment {

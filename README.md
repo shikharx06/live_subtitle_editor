@@ -40,49 +40,40 @@ Tear down:
 docker compose down -v
 ```
 
-## Web demo (browser)
+## Web client (Next.js)
 
-With the stack up, open the editor in your browser:
-
-| URL | Connects to |
-|---|---|
-| <http://localhost:8001/> | app1 directly |
-| <http://localhost:8002/> | app2 directly |
-| <http://localhost:8080/> | via the nginx load balancer |
-
-**To see cross-instance convergence live:**
-
-1. Open <http://localhost:8001/> and click **Create new project**.
-2. The page shows peer links — click the **app2 (:8002)** link to open the *same project*
-   on the other instance in a new tab (or copy the URL and swap `8001`→`8002`).
-3. Edit in either tab — add/edit/reorder/delete segments, change speaker, undo. Each tab
-   is a different user (colored chip), connected to a **different server instance**. Edits
-   echo live and both tabs converge to one state.
-
-The page is server-authoritative (it renders committed ops from the broadcast), shows
-**presence** (who's online + which segment each peer is editing), and a live **activity
-log** built from the op stream. Pull a container (`docker stop subtitle_editor-app1-1`)
-mid-edit to watch a tab reconnect and resume without losing edits.
-
-The page is a single self-contained file ([`app/static/index.html`](app/static/index.html))
-served at `/`; it speaks the exact WebSocket protocol below.
-
-### Full Next.js client + Playwright simulations (`web/`)
-
-A richer **Next.js (App Router) + TypeScript + Tailwind** client lives in [`web/`](web/),
-with a **Playwright** suite that spawns two users on two different backend instances
-(A→app1, B→app2) and simulates every operation, asserting cross-instance convergence
-(including a randomized 30-op stress sim that checks both views match the backend DB).
+The web client is a **Next.js (App Router) + TypeScript + Tailwind** app in [`web/`](web/).
+The backend instances (`:8001`/`:8002`/`:8080`) only serve the REST + WebSocket API now —
+opening one in a browser shows a small API notice, not the editor.
 
 ```bash
 cd web
 npm install
-npx playwright install chromium
-npm run dev        # open http://localhost:3000  (or 3100 if 3000 is taken)
-npx playwright test   # 9 two-user cross-instance simulations
+npx playwright install chromium   # for the simulations (one-time)
+npm run dev                        # open http://localhost:3000  (or 3100 if 3000 is taken)
 ```
 
-Requires the Docker stack (above) to be running. See [`web/README.md`](web/README.md) for details.
+**To see cross-instance convergence live:** create a project, then use the **“Open on app2 ↗”**
+link in the header to open the *same project* on the other server instance in a second tab.
+Each tab is a different user (avatar in the header) on a **different backend instance**;
+edits — add/edit/reorder/delete, speaker changes, undo — echo live and converge. You also
+get **live presence** (who's online + a colored cursor tag on the exact field a peer is
+editing) and a live **activity log** from the op stream. Pick the instance per tab via the
+`?instance=app1|app2|lb` query param (the landing page also has an instance selector).
+
+### Playwright simulations
+
+A **Playwright** suite spawns two users on two different instances (A→app1, B→app2) and
+simulates every operation, asserting cross-instance convergence — including two users in
+the same field and a randomized 30-op stress sim that checks both views match the backend DB.
+
+```bash
+cd web
+npx playwright test                       # 10 two-user cross-instance simulations
+PW_SLOWMO=700 npx playwright test --headed # watch them run; PW_VIDEO=1 records .webm
+```
+
+Requires the Docker stack (above) running. See [`web/README.md`](web/README.md) for details.
 
 ## Run the convergence test
 

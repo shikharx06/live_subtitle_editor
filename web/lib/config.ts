@@ -35,11 +35,15 @@ export function otherInstance(instance: Instance): Instance {
 }
 
 export const SPEAKERS: Speaker[] = [
-  { id: "11111111-1111-4111-8111-111111111111", label: "Speaker A" },
-  { id: "22222222-2222-4222-8222-222222222222", label: "Speaker B" },
-  { id: "33333333-3333-4333-8333-333333333333", label: "Speaker C" },
-  { id: "44444444-4444-4444-8444-444444444444", label: "Speaker D" },
+  { id: "11111111-1111-4111-8111-111111111111", label: "Speaker A", color: "#0F7A66" },
+  { id: "22222222-2222-4222-8222-222222222222", label: "Speaker B", color: "#B26A09" },
+  { id: "33333333-3333-4333-8333-333333333333", label: "Speaker C", color: "#3B5BA5" },
+  { id: "44444444-4444-4444-8444-444444444444", label: "Speaker D", color: "#A23E63" },
 ];
+
+export function speakerById(id: string | null): Speaker | undefined {
+  return id ? SPEAKERS.find((s) => s.id === id) : undefined;
+}
 
 const PEER_COLORS = [
   "#2563eb",
