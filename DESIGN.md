@@ -220,32 +220,7 @@ delete                       inverse  create (from stored row)
 
 ## 5. High-Level Architecture
 
-```
-                      ┌────────────────────┐
-                      │   Load balancer     │   (nginx, WS upgrade)
-                      └─────────┬───────────┘
-            ┌───────────────────┼───────────────────┐
-            ▼                   ▼                   ▼
-     ┌────────────┐      ┌────────────┐      ┌────────────┐
-     │  FastAPI    │      │  FastAPI    │      │  FastAPI    │   stateless
-     │  WebSocket  │      │  WebSocket  │      │  WebSocket  │   app servers
-     └─────┬───────┘      └─────┬───────┘      └─────┬──────┘
-           └────────────────────┼────────────────────┘
-                                ▼
-                      ┌────────────────────┐
-                      │       Redis         │   Pub/Sub fanout
-                      │  Pub/Sub · Presence │   + ephemeral presence
-                      └─────────┬───────────┘
-                                ▼
-                      ┌────────────────────┐
-                      │     PostgreSQL      │   source of truth
-                      │  segments           │
-                      │  operations (log)   │
-                      │  snapshots          │
-                      └────────────────────┘
-```
-
-(Rendered version: [`docs/architecture.svg`](docs/architecture.svg).)
+![Architecture diagram](docs/architecture.svg)
 
 ### Request flow
 
