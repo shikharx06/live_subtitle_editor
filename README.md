@@ -75,6 +75,10 @@ PW_SLOWMO=700 npx playwright test --headed # watch them run; PW_VIDEO=1 records 
 
 Requires the Docker stack (above) running. See [`web/README.md`](web/README.md) for details.
 
+**Recorded runs:** each simulation is captured as a single side-by-side clip (left = User A
+on app1, right = User B on app2) under [`docs/media/playwright/`](docs/media/playwright/) —
+see the gallery in [`web/README.md`](web/README.md#simulation-gallery).
+
 ## Run the convergence test
 
 The tests open WebSocket clients to **both instances directly** (`:8001`, `:8002`) and

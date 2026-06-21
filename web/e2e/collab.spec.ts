@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import { test, expect, type BrowserContext, type Page } from "@playwright/test";
 
 import {
@@ -39,13 +41,22 @@ async function setupPair(browser: import("@playwright/test").Browser): Promise<P
   return { ctxA, ctxB, a, b, projectId };
 }
 
+const PAIRS_DIR = "test-results/pairs";
+
+function slugify(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
 async function teardown(pair: Pair): Promise<void> {
   const videoA = pair.a.video();
   const videoB = pair.b.video();
   await pair.ctxA.close();
   await pair.ctxB.close();
-  if (videoA) console.log(`  🎬 video (A/app1): ${await videoA.path()}`);
-  if (videoB) console.log(`  🎬 video (B/app2): ${await videoB.path()}`);
+  if (process.env.PW_VIDEO && videoA && videoB) {
+    const slug = slugify(test.info().title);
+    await videoA.saveAs(path.join(PAIRS_DIR, `${slug}-A.webm`));
+    await videoB.saveAs(path.join(PAIRS_DIR, `${slug}-B.webm`));
+  }
 }
 
 test.describe("cross-instance collaborative subtitles", () => {
