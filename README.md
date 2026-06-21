@@ -67,6 +67,23 @@ mid-edit to watch a tab reconnect and resume without losing edits.
 The page is a single self-contained file ([`app/static/index.html`](app/static/index.html))
 served at `/`; it speaks the exact WebSocket protocol below.
 
+### Full Next.js client + Playwright simulations (`web/`)
+
+A richer **Next.js (App Router) + TypeScript + Tailwind** client lives in [`web/`](web/),
+with a **Playwright** suite that spawns two users on two different backend instances
+(A→app1, B→app2) and simulates every operation, asserting cross-instance convergence
+(including a randomized 30-op stress sim that checks both views match the backend DB).
+
+```bash
+cd web
+npm install
+npx playwright install chromium
+npm run dev        # open http://localhost:3000  (or 3100 if 3000 is taken)
+npx playwright test   # 9 two-user cross-instance simulations
+```
+
+Requires the Docker stack (above) to be running. See [`web/README.md`](web/README.md) for details.
+
 ## Run the convergence test
 
 The tests open WebSocket clients to **both instances directly** (`:8001`, `:8002`) and

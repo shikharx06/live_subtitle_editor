@@ -1,0 +1,27 @@
+{
+  "name": "subtitle-editor-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "next": "15.5.19",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.53.0",
+    "@types/node": "22.15.30",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.6",
+    "tailwindcss": "3.4.17",
+    "postcss": "8.5.10",
+    "autoprefixer": "10.4.21",
+    "typescript": "5.8.3"
+  }
+}
