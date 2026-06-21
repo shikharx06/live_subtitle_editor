@@ -16,6 +16,9 @@ export default defineConfig({
     baseURL: BASE_URL,
     actionTimeout: 15_000,
     trace: "retain-on-failure",
+    headless: !process.env.PW_HEADED,
+    launchOptions: { slowMo: Number(process.env.PW_SLOWMO ?? 0) },
+    video: process.env.PW_VIDEO ? "on" : "off",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
