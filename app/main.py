@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import os
 import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from . import db, ops
@@ -33,9 +35,17 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Real-Time Collaborative Subtitles Editor", lifespan=lifespan)
 
+_INDEX_HTML = os.path.join(os.path.dirname(__file__), "static", "index.html")
+
 
 class CreateProject(BaseModel):
     title: str | None = None
+
+
+@app.get("/", response_class=HTMLResponse)
+async def index():
+    with open(_INDEX_HTML, encoding="utf-8") as f:
+        return HTMLResponse(f.read())
 
 
 @app.get("/health")

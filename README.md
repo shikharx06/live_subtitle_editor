@@ -40,6 +40,33 @@ Tear down:
 docker compose down -v
 ```
 
+## Web demo (browser)
+
+With the stack up, open the editor in your browser:
+
+| URL | Connects to |
+|---|---|
+| <http://localhost:8001/> | app1 directly |
+| <http://localhost:8002/> | app2 directly |
+| <http://localhost:8080/> | via the nginx load balancer |
+
+**To see cross-instance convergence live:**
+
+1. Open <http://localhost:8001/> and click **Create new project**.
+2. The page shows peer links — click the **app2 (:8002)** link to open the *same project*
+   on the other instance in a new tab (or copy the URL and swap `8001`→`8002`).
+3. Edit in either tab — add/edit/reorder/delete segments, change speaker, undo. Each tab
+   is a different user (colored chip), connected to a **different server instance**. Edits
+   echo live and both tabs converge to one state.
+
+The page is server-authoritative (it renders committed ops from the broadcast), shows
+**presence** (who's online + which segment each peer is editing), and a live **activity
+log** built from the op stream. Pull a container (`docker stop subtitle_editor-app1-1`)
+mid-edit to watch a tab reconnect and resume without losing edits.
+
+The page is a single self-contained file ([`app/static/index.html`](app/static/index.html))
+served at `/`; it speaks the exact WebSocket protocol below.
+
 ## Run the convergence test
 
 The tests open WebSocket clients to **both instances directly** (`:8001`, `:8002`) and
@@ -148,6 +175,7 @@ app/
   fracindex.py   LexoRank-style fractional ordering keys
   schema.py      idempotent DDL bootstrap (§5.1)
   config.py      env-driven settings
+  static/index.html   self-contained browser demo client (served at /)
 tests/
   test_convergence.py   multi-client cross-instance convergence + reconnect (needs stack)
   test_fracindex.py     fractional indexing unit tests (standalone)

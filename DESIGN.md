@@ -605,6 +605,10 @@ To match "a thin but working slice," the runnable cut is:
 - The §5.4 commit path, Redis pub/sub relay, idempotent reconnect, and a **scripted
   multi-client test** that fires concurrent edits at the *same segment via both
   instances* and asserts both clients converge to one final state (the headline property).
+- A **self-contained browser client** (`app/static/index.html`, served at `/`) for an
+  interactive demo: open it on `:8001` and `:8002` (two different instances) and watch
+  edits, presence, and reorders converge live. The scripted test remains the convergence
+  *proof*; the browser client is the human-facing demo.
 - README with ~3 example requests (create project, open WS + send an op, reconnect with
   `last_seq`).
 
