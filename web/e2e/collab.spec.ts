@@ -27,13 +27,16 @@ interface Pair {
   projectId: string;
 }
 
-// use:{video} is ignored for contexts created via browser.newContext(); set recordVideo explicitly.
-const recordVideo = process.env.PW_VIDEO ? { dir: "test-results/videos" } : undefined;
+// Without an explicit size Playwright shrinks recordings to fit 800x800 (blurry); pin it high.
+const recordVideo = process.env.PW_VIDEO
+  ? { dir: "test-results/videos", size: { width: 1000, height: 760 } }
+  : undefined;
+const contextOptions = { recordVideo, viewport: { width: 1000, height: 760 }, deviceScaleFactor: 2 };
 
 async function setupPair(browser: import("@playwright/test").Browser): Promise<Pair> {
   const projectId = await createProject(APP1_HTTP);
-  const ctxA = await browser.newContext({ recordVideo });
-  const ctxB = await browser.newContext({ recordVideo });
+  const ctxA = await browser.newContext(contextOptions);
+  const ctxB = await browser.newContext(contextOptions);
   const a = await ctxA.newPage();
   const b = await ctxB.newPage();
   await openEditor(a, projectId, "app1");

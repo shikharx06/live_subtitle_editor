@@ -16,10 +16,10 @@ for a in "$PAIRS"/*-A.webm; do
   b="$PAIRS/${slug}-B.webm"
   [ -f "$b" ] || { echo "missing B for $slug"; continue; }
   ffmpeg -y -loglevel error -i "$a" -i "$b" -filter_complex \
-    "[0:v]scale=-2:480,setsar=1,pad=iw:ih+10:0:10:color=0x0F7A66,pad=iw+2:ih:0:0:color=0xE9E5DC[a];\
-     [1:v]scale=-2:480,setsar=1,pad=iw:ih+10:0:10:color=0x3B5BA5[b];\
+    "[0:v]scale=-2:760,setsar=1,pad=iw:ih+12:0:12:color=0x0F7A66,pad=iw+2:ih:0:0:color=0xE9E5DC[a];\
+     [1:v]scale=-2:760,setsar=1,pad=iw:ih+12:0:12:color=0x3B5BA5[b];\
      [a][b]hstack=inputs=2[v]" \
-    -map "[v]" -c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p -movflags +faststart -an \
+    -map "[v]" -c:v libx264 -crf 20 -preset slow -pix_fmt yuv420p -movflags +faststart -an \
     "$OUT/${slug}.mp4"
   echo "ok: ${slug}.mp4"
 done
