@@ -25,10 +25,13 @@ interface Pair {
   projectId: string;
 }
 
+// use:{video} is ignored for contexts created via browser.newContext(); set recordVideo explicitly.
+const recordVideo = process.env.PW_VIDEO ? { dir: "test-results/videos" } : undefined;
+
 async function setupPair(browser: import("@playwright/test").Browser): Promise<Pair> {
   const projectId = await createProject(APP1_HTTP);
-  const ctxA = await browser.newContext();
-  const ctxB = await browser.newContext();
+  const ctxA = await browser.newContext({ recordVideo });
+  const ctxB = await browser.newContext({ recordVideo });
   const a = await ctxA.newPage();
   const b = await ctxB.newPage();
   await openEditor(a, projectId, "app1");
@@ -37,8 +40,12 @@ async function setupPair(browser: import("@playwright/test").Browser): Promise<P
 }
 
 async function teardown(pair: Pair): Promise<void> {
+  const videoA = pair.a.video();
+  const videoB = pair.b.video();
   await pair.ctxA.close();
   await pair.ctxB.close();
+  if (videoA) console.log(`  🎬 video (A/app1): ${await videoA.path()}`);
+  if (videoB) console.log(`  🎬 video (B/app2): ${await videoB.path()}`);
 }
 
 test.describe("cross-instance collaborative subtitles", () => {
