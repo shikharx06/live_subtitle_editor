@@ -1,3 +1,7 @@
+"""DDL and idempotent schema bootstrap (advisory-locked against concurrent instances)."""
+
+from __future__ import annotations
+
 SCHEMA_SQL = """
 CREATE TABLE IF NOT EXISTS projects (
     id           uuid PRIMARY KEY,

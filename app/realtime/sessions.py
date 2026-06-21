@@ -1,3 +1,5 @@
+"""Per-instance registry of local WS sessions, bridged to the pub/sub bus per project."""
+
 from __future__ import annotations
 
 import asyncio
@@ -6,7 +8,7 @@ from typing import Any
 
 from fastapi import WebSocket
 
-from .bus import Bus
+from .pubsub import PubSub
 
 
 class Session:
@@ -18,11 +20,11 @@ class Session:
         await self.ws.send_text(json.dumps(message))
 
 
-class Hub:
-    """Per-instance registry of local WS sessions, subscribed to Redis per active project."""
+class ConnectionManager:
+    """Local WS sessions, subscribed to the bus on a project's first session."""
 
-    def __init__(self, bus: Bus):
-        self._bus = bus
+    def __init__(self, pubsub: PubSub):
+        self._pubsub = pubsub
         self._sessions: dict[str, set[Session]] = {}
         self._lock = asyncio.Lock()
 
@@ -31,7 +33,7 @@ class Hub:
             first = project_id not in self._sessions
             self._sessions.setdefault(project_id, set()).add(session)
             if first:
-                await self._bus.subscribe(project_id, self._make_relay(project_id))
+                await self._pubsub.subscribe(project_id, self._make_relay(project_id))
 
     async def remove(self, project_id: str, session: Session) -> None:
         async with self._lock:
@@ -41,7 +43,7 @@ class Hub:
             peers.discard(session)
             if not peers:
                 del self._sessions[project_id]
-                await self._bus.unsubscribe(project_id)
+                await self._pubsub.unsubscribe(project_id)
 
     def _make_relay(self, project_id: str):
         async def relay(message: dict[str, Any]) -> None:

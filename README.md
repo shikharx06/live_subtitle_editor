@@ -182,22 +182,37 @@ effectively exactly-once state.
 
 ## Layout
 
+Layered architecture (composition root → api → services → domain / persistence / realtime):
+
 ```
 app/
-  main.py        FastAPI app: lifespan, REST, WS protocol (§5.5)
-  db.py          asyncpg pool + the §5.4 commit path (CAS bump, idempotent append, LWW upsert)
-  ops.py         payload/inverse builders per op type + undo inversion (§5.7)
-  bus.py         Redis pub/sub fan-out + ephemeral presence hash (§5.8)
-  hub.py         per-instance WS session registry, subscribes per active project
-  fracindex.py   LexoRank-style fractional ordering keys
-  schema.py      idempotent DDL bootstrap (§5.1)
-  config.py      env-driven settings
-  static/index.html   self-contained browser demo client (served at /)
+  main.py                composition root: lifespan builds + injects deps, mounts routers, serves /
+  config.py              env-driven settings
+  domain/
+    models.py            OpType enum + dataclasses (Segment, Operation, CommittedOp, CommitResult, …)
+    ordering.py          LexoRank-style fractional ordering keys (pure)
+    operations.py        OperationFactory — builds forward payload + inverse per op type; undo inversion (§5.7)
+  persistence/
+    database.py          asyncpg pool + Executor protocol (works in or out of a txn)
+    schema.py            idempotent DDL bootstrap (§5.1)
+    repositories.py      Project / Segment / Operation repositories (all SQL lives here)
+  services/
+    collaboration.py     CollaborationService — the §5.4 commit path (CAS bump, idempotent append, LWW), undo, snapshot, catch-up
+  realtime/
+    pubsub.py            PubSub protocol + RedisPubSub fan-out
+    presence.py          ephemeral presence hash (§5.8)
+    sessions.py          ConnectionManager — per-instance WS session registry, subscribes per active project
+  api/
+    rest.py              REST router: POST /projects, GET /projects/{id}, GET /health
+    websocket.py         WS endpoint + EditorConnection dispatch table (§5.5)
+    schemas.py           request/response models
+  static/index.html      self-contained browser demo client (served at /)
 tests/
   test_convergence.py   multi-client cross-instance convergence + reconnect (needs stack)
   test_fracindex.py     fractional indexing unit tests (standalone)
   client.py             minimal WS protocol test client
-docker-compose.yml  postgres, redis, app1, app2, nginx
-Dockerfile          app image (python 3.12-slim, uvicorn[uvloop])
-nginx.conf          L7 LB with WS upgrade, ip_hash sticky-by-connection
+web/                  Next.js + Tailwind client + Playwright simulations (see web/README.md)
+docker-compose.yml    postgres, redis, app1, app2, nginx
+Dockerfile            app image (python 3.12-slim, uvicorn[uvloop])
+nginx.conf            L7 LB with WS upgrade, ip_hash sticky-by-connection
 ```
